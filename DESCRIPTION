@@ -1,0 +1,19 @@
+Package: genius
+Title: G-Estimation under No-Interaction with Unmeasured Selection
+Date: 2017-09-22
+Version: 0.1
+Authors@R: c(
+    person("BaoLuo", "Sun", email = "bluosun@gmail.com", role = c("aut","cre")),
+    person("Eric", "Tchetgen Tchetgen", email = "etchetge@hsph.harvard.edu", role = "aut"))
+Author: BaoLuo Sun and Eric Tchetgen Tchetgen
+Maintainer: BaoLuo Sun <bluosun@gmail.com>
+Description: This package implements the MR GENIUS estimator.
+Depends: R (>= 3.4.1)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: gmm (>= 1.6-1)
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
