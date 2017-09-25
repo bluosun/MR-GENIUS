@@ -1,7 +1,7 @@
 # MR-GENIUS
 
-The "genius" R package implements mendelian randomization G-Estimation under no interaction with unmeasured selection 
-(MR GENIUS), based on work by Tchetgen Tchetgen, E., Sun B. and Walter S. (2017).
+The "genius" R package implements mendelian randomization G-estimation under no interaction with unmeasured selection 
+(MR GENIUS), based on work by Tchetgen Tchetgen, E., Sun, B. and Walter, S. (2017).
 
 # How to Install
 
