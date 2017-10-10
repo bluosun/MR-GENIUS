@@ -11,7 +11,7 @@ genius(Y, A, G, alpha = 0.05, lower = -10, upper = 10)
 
 \item{A}{A numeric vector of exposures (binary values should be coded in 0/1).}
 
-\item{G}{A numeric matrix of instruments; each column stores values for one instrument.}
+\item{G}{A numeric matrix of instruments; each column stores values for one instrument (a numeric vector if only a single instrument is available).}
 
 \item{alpha}{Significance level for confidence interval (default value=0.05).}
 
@@ -24,7 +24,52 @@ A "genius" object containing the following items:
 \item{beta.est}{The point estimate of causal effect of the exposure on the outcome.}
 \item{beta.var}{The corresponding estimated variance.}
 \item{ci}{The corresponding Wald-type confidence interval at specified significance level.}
+\item{pval}{The p-value for two-sided Wald test of null causal effect of the exposure on the outcome.}
 }
 \description{
 Implements G-Estimation under No-Interaction with Unmeasured Selection.
+}
+\details{
+This function implements estimation of causal effect under an additive outcome model. The estimator is given in equations (6) and (12) of Tchetgen Tchetgen et al (2017) for single and multiple instruments, respectively. The term
+\eqn{E(A|G)} is modelled under the logit and identity links for binary and continuous exposure respectively, with a linear predictor consisting of the main effects of all available instruments.
+}
+\examples{
+# the following packages are needed to simulate data
+library("msm")
+library("MASS")
+
+### example with binary exposure, all instruments invalid ###
+# true causal effect, beta = 1.0
+# Number of instruments, nIV = 10
+# Y: vector of outcomes
+# A: vector of exposures
+# G: matrix of instruments, one column per instrument
+
+nIV=10; N=5000; beta=1;
+phi=rep(-0.02,nIV); gamma=rep(-0.15,nIV); alpha=rep(-0.5,nIV);
+Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
+
+G  = (Gn>0)*1;
+U= as.vector(phi\%*\%t(G))+ rtnorm(n=N,mean=0.35,lower=0.2,upper=0.5);
+A = rbinom(N,1,expit(as.vector(gamma\%*\%t(G)))+U-0.35-as.vector(phi\%*\%t(G)));
+Y = as.vector(alpha\%*\%t(G)) + beta*A + U + rnorm(N);
+
+genius(Y,A,G);
+
+### example with continous exposure, all instruments invalid ###
+
+nIV=10; N=500; beta=1;
+phi=rep(-0.5,nIV); gamma=rep(-2,nIV); alpha=rep(-0.5,nIV);
+lambda0=1; lambda1=rep(0.5,nIV);
+Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
+
+G  = (Gn>0)*1;
+U = as.vector(phi\%*\%t(G))+rnorm(N);
+A = as.vector(gamma\%*\%t(G)) +U + rnorm(N,mean=0,sd=abs(lambda0+as.vector(lambda1\%*\%t(G))));
+Y = as.vector(alpha\%*\%t(G)) + beta*A + U + rnorm(N);
+
+genius(Y,A,G);
+}
+\references{
+Tchetgen Tchetgen, E., Sun, B. and Walter, S. (2017). \href{https://arxiv.org/abs/1709.07779}{The GENIUS Approach to Robust Mendelian Randomization Inference}. arXiv e-prints.
 }
