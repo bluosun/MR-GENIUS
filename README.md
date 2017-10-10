@@ -25,7 +25,7 @@ The package currently offers one function "genius" which returns the MR GENIUS e
 genius(Y, A, G, alpha = 0.05, lower=-10, upper=10)
 ```
 
-# Examples
+## Examples
 
 ```r
 # the following packages are needed to simulate data; they are not required to run "genius" package
