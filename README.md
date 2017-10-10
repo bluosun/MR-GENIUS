@@ -28,7 +28,7 @@ genius(Y, A, G, alpha = 0.05, lower=-10, upper=10)
 # Examples
 
 ```r
-# the following packages are needed to simulate data; they are not required for 
+# the following packages are needed to simulate data; they are not required to run "genius" package
 library("msm")
 library("MASS")
 
