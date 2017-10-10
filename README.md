@@ -12,7 +12,7 @@ devtools::install_github("bluosun/MR-GENIUS")
 ```
 (requires R version >= 3.4.1) 
 # Overview
-The package currently offers one function "genius" which returns the MR GENIUS estimate, estimated variance, confidence interval at user-specified significance level as well as the p-val corresponding to the two-sided Wald test of null causal effect of the exposure on the outcome. The estimator is given in equations (6) and (12) of Tchetgen Tchetgen et al (2017) for single and multiple instruments respectively, under an additive outcome model. The term E[A|G] is modelled under the logit and identity links for binary and continuous exposure respectively, with a linear predictor consisting of the main effects of all available instruments.  
+The package currently offers one function "genius" which returns the MR GENIUS estimate, estimated variance, confidence interval at user-specified significance level as well as the p-value corresponding to the two-sided Wald test of null causal effect of the exposure on the outcome. The estimator is given in equations (6) and (12) of Tchetgen Tchetgen et al (2017) for single and multiple instruments respectively, under an additive outcome model. The term E[A|G] is modelled under the logit and identity links for binary and continuous exposure respectively, with a linear predictor consisting of the main effects of all available instruments.  
 
 ```r
 #Y: A numeric vector of outcomes
