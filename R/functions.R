@@ -27,6 +27,9 @@
 #'# the following packages are needed to simulate data
 #'library("msm")
 #'library("MASS")
+#'expit <- function(x) {
+#'    exp(x)/(1+exp(x))
+#'}
 #'
 #'### example with binary exposure, all instruments invalid ###
 #'# true causal effect, beta = 1.0
