@@ -1,6 +1,6 @@
 Package: genius
 Title: G-Estimation under No-Interaction with Unmeasured Selection
-Date: 2017-09-22
+Date: 2017-10-10
 Version: 0.2
 Authors@R: c(
     person("BaoLuo", "Sun", email = "bluosun@gmail.com", role = c("aut","cre")),
