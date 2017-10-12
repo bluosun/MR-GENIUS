@@ -55,6 +55,10 @@ expit <- function(x) {
     exp(x)/(1+exp(x))
 }
 
+#################################################
+######## Additive outcome model examples ########
+#################################################
+
 ### example with binary exposure, all instruments invalid ###
 # true causal effect, beta = 1.0
 # Number of instruments, nIV = 10
@@ -62,30 +66,82 @@ expit <- function(x) {
 # A: vector of exposures
 # G: matrix of instruments, one column per instrument
 
-nIV=10; N=5000; beta=1;
+nIV=10; N=5000; beta=1.5;
 phi=rep(-0.02,nIV); gamma=rep(-0.15,nIV); alpha=rep(-0.5,nIV);
 Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
-
 G  = (Gn>0)*1;
 U= as.vector(phi%*%t(G))+ rtnorm(n=N,mean=0.35,lower=0.2,upper=0.5);
 A = rbinom(N,1,expit(as.vector(gamma%*%t(G)))+U-0.35-as.vector(phi%*%t(G)));
 Y = as.vector(alpha%*%t(G)) + beta*A + U + rnorm(N);
 
-genius(Y,A,G);
+genius_addY(Y,A,G);
+
+### specify a more richly parameterized linear predictor for the model 
+### of E[A|G] containing all main effects and pairwise interactions of 
+### instruments
+
+colnames(G)=paste("g",1:10,sep="")
+
+genius_addY(Y,A,G,A~(g1+g2+g3+g4+g5+g6+g7+g8+g9+g10)^2);
 
 ### example with continous exposure, all instruments invalid ###
+# true causal effect, beta = 1.5
+# Number of instruments, nIV = 10
+# Y: vector of outcomes
+# A: vector of exposures
+# G: matrix of instruments, one column per instrument
 
-nIV=10; N=500; beta=1;
+nIV=10; N=500; beta=1.5;
 phi=rep(-0.5,nIV); gamma=rep(-2,nIV); alpha=rep(-0.5,nIV);
 lambda0=1; lambda1=rep(0.5,nIV);
 Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
-
 G  = (Gn>0)*1;
 U = as.vector(phi%*%t(G))+rnorm(N);
 A = as.vector(gamma%*%t(G)) +U + rnorm(N,mean=0,sd=abs(lambda0+as.vector(lambda1%*%t(G))));
 Y = as.vector(alpha%*%t(G)) + beta*A + U + rnorm(N);
 
-genius(Y,A,G);
+genius_addY(Y,A,G);
+
+#######################################################
+######## Multiplicative outcome model examples ########
+#######################################################
+
+
+### example with binary exposure, all instruments invalid ###
+# true causal effect, beta = 1.5
+# Number of instruments, nIV = 10
+# Y: vector of outcomes
+# A: vector of exposures
+# G: matrix of instruments, one column per instrument
+
+nIV=10; N=2000; beta=1.5;
+phi=rep(-0.02,nIV); gamma=rep(-0.15,nIV); alpha=rep(-0.5,nIV);
+Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
+G  = (Gn>0)*1;
+U= as.vector(phi%*%t(G))+ rtnorm(n=N,mean=0.35,lower=0.2,upper=0.5);
+A = rbinom(N,1,expit(as.vector(gamma%*%t(G)))+U-0.35-as.vector(phi%*%t(G)));
+Y = exp(beta*A)*(as.vector(alpha%*%t(G)) + U) + rnorm(N);
+
+genius_mulY(Y,A,G);
+
+### specify a more richly parameterized linear predictor for the model of E[A|G] 
+### containing all main effects and pairwise interactions of instruments                                                       
+
+colnames(G)=paste("g",1:10,sep="")
+
+genius_mulY(Y,A,G,A~(g1+g2+g3+g4+g5+g6+g7+g8+g9+g10)^2);
+
+### continuous exposure
+nIV=10; N=2000; beta=1.5; 
+phi=rep(0.5,nIV); gamma=rep(0.5,nIV); alpha=rep(0.2,nIV);
+lambda0=1; lambda1=rep(0.2,nIV);
+Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
+G  = (Gn>0)*1;
+U = as.vector(phi%*%t(G))+rnorm(N);
+A = as.vector(gamma%*%t(G)) +U + rnorm(N,mean=0,sd=abs(lambda0+as.vector(lambda1%*%t(G))));
+Y = exp(beta*A)*(as.vector(alpha%*%t(G)) + U) + rnorm(N);
+
+genius_mulY(Y,A,G);
 ```
 
 # References 
