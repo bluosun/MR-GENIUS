@@ -12,20 +12,39 @@ devtools::install_github("bluosun/MR-GENIUS")
 ```
 (requires R version >= 3.4.1) 
 # Overview
-The package currently offers one function "genius" which returns the MR GENIUS estimate, estimated variance, confidence interval at user-specified significance level as well as the p-value corresponding to the two-sided Wald test of null causal effect of the exposure on the outcome. The estimator is given in equations (6) and (12) of Tchetgen Tchetgen et al (2017) for single and multiple instruments respectively, under an additive outcome model. The term E[A|G] is modelled under the logit and identity links for binary and continuous exposure respectively, with a linear predictor consisting of the main effects of all available instruments.  
+The package currently implements two MR GENIUS estimators, *genius_addY* and *genius_mulY*, for additive and multiplicative outcome models, respectively. The functions report the MR GENIUS estimate, estimated variance, confidence interval at user-specified significance level as well as the p-value corresponding to the two-sided Wald test of null causal effect of the exposure on the outcome. 
+
+## MR GENIUS under an additive outcome model
+
+*genius_addY* implements the estimators given in equations (6) and (12) of Tchetgen Tchetgen et al (2017) for single and multiple instruments, respectively. The term E[*A*|*G*] is modelled under the logit and identity links for binary and continuous exposure respectively, with a default linear predictor consisting of the main effects of all available instruments.  
 
 ```r
-#Y: A numeric vector of outcomes
-#A: A numeric vector of exposures (binary values should be coded in 1/0)
-#G: A numeric matrix of IVs; each column stores values for one IV
-#alpha: Significance level for confidence interval (default value=0.05)
-#lower: The lower end point of the causal effect interval to be searched (default value=-10) 
-#upper: The upper end point of the causal effect interval to be searched (default value=-10) 
+#Y      : A numeric vector of outcomes
+#A      : A numeric vector of exposures (binary values should be coded in 1/0)
+#G      : A numeric matrix of IVs; each column stores values for one IV
+#formula: An object of class "formula" describing the linear predictor of the model for E[A|G] (default A~G, main effects of all available instruments).
+#alpha  : Significance level for confidence interval (default value=0.05)
+#lower  : The lower end point of the causal effect interval to be searched (default value=-10) 
+#upper  : The upper end point of the causal effect interval to be searched (default value=-10) 
 
-genius(Y, A, G, alpha = 0.05, lower=-10, upper=10)
+genius_addY(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10) 
 ```
+## MR GENIUS under a multiplicative outcome model
 
-## Examples
+*genius_mulY* implements MR GENIUS as the solution to the empirical version of equation (14) in Tchetgen Tchetgen et al (2017). The term E[*A*|*G*] is modelled under the logit and identity links for binary and continuous exposure respectively, with a default linear predictor consisting of the main effects of all available instruments.  
+
+```r
+#Y      : A numeric vector of outcomes
+#A      : A numeric vector of exposures (binary values should be coded in 1/0)
+#G      : A numeric matrix of IVs; each column stores values for one IV
+#formula: An object of class "formula" describing the linear predictor of the model for E[A|G] (default A~G, main effects of all available instruments).
+#alpha  : Significance level for confidence interval (default value=0.05)
+#lower  : The lower end point of the causal effect interval to be searched (default value=-10) 
+#upper  : The upper end point of the causal effect interval to be searched (default value=-10) 
+
+genius_mulY(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10) 
+```
+# Examples
 
 ```r
 # the following packages are needed to simulate data; they are not required to run "genius" package
@@ -69,7 +88,7 @@ Y = as.vector(alpha%*%t(G)) + beta*A + U + rnorm(N);
 genius(Y,A,G);
 ```
 
-## References 
+# References 
 Tchetgen Tchetgen, E., Sun, B. and Walter, S. (2017). <a href="https://arxiv.org/abs/1709.07779"> The GENIUS Approach to Robust Mendelian Randomization Inference.</a> arXiv e-prints.
 
 
