@@ -21,7 +21,7 @@ The package currently implements two MR GENIUS estimators, *genius_addY* and *ge
 ```r
 #Y      : A numeric vector of outcomes
 #A      : A numeric vector of exposures (binary values should be coded in 1/0)
-#G      : A numeric matrix of IVs; each column stores values for one IV (a numeric vector if only a single instrument is available).
+#G      : A numeric matrix of IVs; each column stores values for one IV (a numeric vector if only a single IV is available).
 #formula: An object of class "formula" describing the linear predictor of the model for E[A|G] (default A~G, main effects of all available instruments).
 #alpha  : Significance level for confidence interval (default value=0.05)
 #lower  : The lower end point of the causal effect interval to be searched (default value=-10) 
@@ -36,7 +36,7 @@ genius_addY(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10)
 ```r
 #Y      : A numeric vector of outcomes
 #A      : A numeric vector of exposures (binary values should be coded in 1/0)
-#G      : A numeric matrix of IVs; each column stores values for one IV (a numeric vector if only a single instrument is available).
+#G      : A numeric matrix of IVs; each column stores values for one IV (a numeric vector if only a single IV is available).
 #formula: An object of class "formula" describing the linear predictor of the model for E[A|G] (default A~G, main effects of all available instruments).
 #alpha  : Significance level for confidence interval (default value=0.05)
 #lower  : The lower end point of the causal effect interval to be searched (default value=-10) 
