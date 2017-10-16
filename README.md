@@ -44,6 +44,20 @@ genius_addY(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10)
 
 genius_mulY(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10) 
 ```
+## MR GENIUS under a multiplicative exposure model
+
+*genius_mulA* implements the estimator given in Lemma 3 of Tchetgen Tchetgen et al (2017), under a multiplicative exposure model. By default, the log ratio term in equation (9) is modelled as a linear combination of the main effects of all available instruments.  
+
+```r
+#Y      : A numeric vector of outcomes
+#A      : A numeric vector of exposures (binary values should be coded in 1/0)
+#G      : A numeric matrix of IVs; each column stores values for one IV (a numeric vector if only a single IV is available).
+#alpha  : Significance level for confidence interval (default value=0.05)
+#lower  : The lower end point of the causal effect interval to be searched (default value=-10) 
+#upper  : The upper end point of the causal effect interval to be searched (default value=-10) 
+
+genius_mulA(Y,A,G,alpha=0.05,lower=-10,upper=10) 
+```
 # Examples
 
 ```r
@@ -132,9 +146,10 @@ colnames(G)=paste("g",1:10,sep="")
 genius_mulY(Y,A,G,A~(g1+g2+g3+g4+g5+g6+g7+g8+g9+g10)^2);
 
 ### continuous exposure
-nIV=10; N=2000; beta=1.5; 
-phi=rep(0.5,nIV); gamma=rep(0.5,nIV); alpha=rep(0.2,nIV);
-lambda0=1; lambda1=rep(0.2,nIV);
+nIV=10; N=2000; beta=0.25; 
+phi=rep(0.2,nIV); gamma=rep(0.5,nIV); alpha=rep(0.5,nIV);
+
+lambda0=0.5; lambda1=rep(0.5,nIV);
 Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
 G  = (Gn>0)*1;
 U = as.vector(phi%*%t(G))+rnorm(N);
@@ -142,6 +157,21 @@ A = as.vector(gamma%*%t(G)) +U + rnorm(N,mean=0,sd=abs(lambda0+as.vector(lambda1
 Y = exp(beta*A)*(as.vector(alpha%*%t(G)) + U) + rnorm(N);
 
 genius_mulY(Y,A,G);
+
+########################################################
+######## Multiplicative exposure model examples ########
+########################################################
+
+nIV=10; N=2000; beta=0.5; 
+gamma=rep(0.5,nIV); alpha=rep(0.5,nIV);phi=rep(0.05,nIV);
+Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
+G  = (Gn>0)*1;
+U = as.vector(phi%*%t(G))+rnorm(N);
+#exposure generated from negative binomial distribution
+A = rnbinom(N,size=10,mu = exp(as.vector(gamma%*%t(G)) +0.1*U)) 
+Y = as.vector(alpha%*%t(G)) + beta*A + U + rnorm(N);
+
+genius.mulA(Y,A,G);
 ```
 
 # References 
