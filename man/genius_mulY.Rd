@@ -67,9 +67,9 @@ colnames(G)=paste("g",1:10,sep="")
 genius_mulY(Y,A,G,A~(g1+g2+g3+g4+g5+g6+g7+g8+g9+g10)^2);
 
 ### continuous exposure
-nIV=10; N=2000; beta=1.5; 
-phi=rep(0.5,nIV); gamma=rep(0.5,nIV); alpha=rep(0.2,nIV);
-lambda0=1; lambda1=rep(0.2,nIV);
+nIV=10; N=2000; beta=0.25; 
+phi=rep(0.2,nIV); gamma=rep(0.5,nIV); alpha=rep(0.5,nIV);
+lambda0=0.5; lambda1=rep(0.5,nIV);
 Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
 G  = (Gn>0)*1;
 U = as.vector(phi\%*\%t(G))+rnorm(N);
