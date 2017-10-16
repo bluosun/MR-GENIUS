@@ -12,7 +12,7 @@ devtools::install_github("bluosun/MR-GENIUS")
 ```
 (requires R version >= 3.4.1) 
 # Overview
-The package currently implements two MR GENIUS estimators, *genius_addY* and *genius_mulY*, for additive and multiplicative outcome models, respectively. The functions report the MR GENIUS estimate, estimated variance, confidence interval at user-specified significance level as well as the p-value corresponding to the two-sided Wald test of null causal effect of the exposure on the outcome. 
+The package currently implements the following three MR GENIUS estimators. The functions report the MR GENIUS estimate, estimated variance, confidence interval at user-specified significance level as well as the p-value corresponding to the two-sided Wald test of null causal effect of the exposure on the outcome. 
 
 ## MR GENIUS under an additive outcome model
 
