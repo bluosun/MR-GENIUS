@@ -213,9 +213,9 @@ genius_addY <- function(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10) {
 #'genius_mulY(Y,A,G,A~(g1+g2+g3+g4+g5+g6+g7+g8+g9+g10)^2);
 #'
 #'### continuous exposure
-#'nIV=10; N=2000; beta=1.5; 
-#'phi=rep(0.5,nIV); gamma=rep(0.5,nIV); alpha=rep(0.2,nIV);
-#'lambda0=1; lambda1=rep(0.2,nIV);
+#'nIV=10; N=2000; beta=0.25; 
+#'phi=rep(0.2,nIV); gamma=rep(0.5,nIV); alpha=rep(0.5,nIV);
+#'lambda0=0.5; lambda1=rep(0.5,nIV);
 #'Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
 #'G  = (Gn>0)*1;
 #'U = as.vector(phi%*%t(G))+rnorm(N);
@@ -305,3 +305,120 @@ genius_mulY <- function(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10) {
   	class(object) <- "genius"
   	return(object)
 }
+
+
+#' @title MR GENIUS under multiplicative exposure model
+#' 
+#' @description
+#' Implements MR GENIUS under a multiplicative exposure model.
+#'
+#' @details
+#' This function implements the estimator given in Lemma 3 of Tchetgen Tchetgen et al (2017), under a multiplicative exposure model. By default, the log ratio term in equation (9) is modelled as a linear combination of the main effects of all available instruments.  
+#'
+#' @references
+#' Tchetgen Tchetgen, E., Sun, B. and Walter, S. (2017). \href{https://arxiv.org/abs/1709.07779}{The GENIUS Approach to Robust Mendelian Randomization Inference}. arXiv e-prints.
+#' 
+#' @param Y A numeric vector of outcomes.
+#' @param A A numeric vector of exposures (binary values should be coded in 0/1).
+#' @param G A numeric matrix of instruments; each column stores values for one instrument (a numeric vector if only a single instrument is available).
+#' @param alpha Significance level for confidence interval (default value=0.05).
+#' @param lower The lower end point of the causal effect interval to be searched (default value=-10).
+#' @param upper The upper end point of the causal effect interval to be searched (default value=10).
+#'
+#' @return A "genius" object containing the following items:
+#' \item{beta.est}{The point estimate of the causal effect (on the additive scale) of the exposure on the outcome.}
+#' \item{beta.var}{The corresponding estimated variance.}
+#' \item{ci}{The corresponding Wald-type confidence interval at specified significance level.}
+#' \item{pval}{The p-value for two-sided Wald test of null causal effect (on the additive scale) of the exposure on the outcome.}
+#'
+#' @examples
+#'#the following package is needed to simulate data
+#'library("MASS")
+#'nIV=10; N=2000; beta=0.5; 
+#'gamma=rep(0.5,nIV); alpha=rep(0.5,nIV);phi=rep(0.05,nIV);
+#'Gn = mvrnorm(N,rep(0,nIV),diag(rep(1,nIV)))
+#'G  = (Gn>0)*1;
+#'U = as.vector(phi%*%t(G))+rnorm(N);
+#'#exposure generated from negative binomial distribution
+#'A = rnbinom(N,size=10,mu = exp(as.vector(gamma%*%t(G)) +0.1*U)) 
+#'Y = as.vector(alpha%*%t(G)) + beta*A + U + rnorm(N);
+#'
+#'genius_mulA(Y,A,G);
+#'
+#'
+#' @export
+
+genius_mulA <- function(Y,A,G,alpha=0.05,lower=-10,upper=10) {
+
+
+	if (is.data.frame(Y)) {
+		Y=as.vector(data.matrix(Y));
+	}
+	if (is.data.frame(A)) {
+		A=as.vector(data.matrix(A));
+	}
+	if (is.data.frame(G)) {
+		G=data.matrix(G)
+	}
+	if (class(G) == "matrix") {
+		#number of IVs
+  		nIV =dim(G)[2];
+		#sample size
+		N = dim(G)[1];
+		if (nIV==1) {G=as.vector(G);}
+	} else {
+  		nIV =1;
+		N = length(G);
+	}
+	A.binary = all(A %in% 0:1);
+
+	if (nIV>1) {
+
+	      #Estimation for pi (vector of parameters in equation 9)
+		pi.func <- function(pi,A,G) {
+			apply(as.vector(A*exp(-G%*%pi))*sweep(G,2,apply(G,2,mean),"-"),2,mean)
+		}
+		pi.fit <- BB::dfsane(par = rep(0,nIV), fn = pi.func,
+    			    control = list(NM = TRUE, M = 100, noimp = 500, trace = FALSE),
+    			    A=A, G = G)
+
+		#GMM for multiple-IV, empirical version of equation in Lemma 3
+		gmm.fun <- function(beta, X) {
+			sweep(X,2,apply(X,2,mean),"-")*(as.vector(A*exp(-X%*%pi.fit$par))-mean((A*exp(-X%*%pi.fit$par))))*(Y-beta*A)
+		}
+		gmm.out = gmm::gmm(gmm.fun,x=G,t0=c(lower,upper),optfct="optimize",
+			type="iterative",wmatrix="optimal",vcov="iid",centeredVcov=TRUE);
+
+		beta.est=gmm.out$coef;
+
+		#estimated asymptotic variance
+		mm= mm.mulA(beta.est, pi.fit$par, nIV, A, G, Y, N); 
+		M = M.mulA(beta.est, pi.fit$par, nIV,  A, G, Y, N);
+		B = B.mulA(beta.est, pi.fit$par, nIV,  A, G, Y, N);
+
+		beta.var= diag((1/N)*(solve(B)%*%M)%*%mm%*%t((solve(B)%*%M)))[2*nIV+2];
+
+	} else {
+
+		pi.func <- function(pi,A,G) {
+			mean(A*exp(-G*pi)*(G-mean(G)));
+		}
+		pi.fit <- BB::BBoptim(par = rep(0,nIV), fn = pi.func, A=A, G = G, quiet=TRUE);
+		#single-IV estimator 
+		beta.est = mean((G-mean(G))*(as.vector(A*exp(-G*pi.fit$par))-mean((A*exp(-G*pi.fit$par))))*Y) /
+			     mean((G-mean(G))*(as.vector(A*exp(-G*pi.fit$par))-mean((A*exp(-G*pi.fit$par))))*A);
+
+		#estimated asymptotic variance
+		mm= mm.mulA(beta.est, pi.fit$par, nIV, A, G, Y, N); 
+		B = B.mulA(beta.est, pi.fit$par, nIV, A, G, Y, N);
+
+		beta.var=diag((1/N)*(solve(B))%*%mm%*%t((solve(B))))[2*nIV+2];
+	}
+
+	ci = beta.est + c(-1,1)*stats::qnorm(1-alpha/2)*sqrt(beta.var);
+	pval = 2*pnorm(-abs(beta.est/sqrt(beta.var)));
+ 	object <- list(beta.est=unname(beta.est), beta.var = beta.var, ci=ci, pval=unname(pval))
+  	class(object) <- "genius"
+  	return(object)
+}
+
