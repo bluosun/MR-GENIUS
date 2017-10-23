@@ -11,6 +11,13 @@ To install this package, use devtools:
 devtools::install_github("bluosun/MR-GENIUS")
 ```
 (requires R version >= 3.4.1) 
+
+and then load the package:
+
+```r
+library("genius")
+```
+
 # Overview
 The package currently implements the following three MR GENIUS estimators. The functions report the MR GENIUS estimate, estimated variance, confidence interval at user-specified significance level as well as the p-value corresponding to the two-sided Wald test of null causal effect of the exposure on the outcome. 
 
