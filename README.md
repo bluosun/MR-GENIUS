@@ -68,6 +68,7 @@ genius_mulA(Y,A,G,alpha=0.05,lower=-10,upper=10)
 # Examples
 
 ```r
+library("genius")
 # the following packages are needed to simulate data; they are not required to run "genius" package
 library("msm")
 library("MASS")
