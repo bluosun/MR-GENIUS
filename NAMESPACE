@@ -3,3 +3,4 @@
 export(genius_addY)
 export(genius_mulA)
 export(genius_mulY)
+importFrom(lmtest,bptest)

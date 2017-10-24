@@ -1,7 +1,7 @@
 Package: genius
 Title: G-Estimation under No-Interaction with Unmeasured Selection
-Date: 2017-10-16
-Version: 1.0
+Date: 2017-10-24
+Version: 1.1
 Authors@R: c(
     person("BaoLuo", "Sun", email = "bluosun@gmail.com", role = c("aut","cre")),
     person("Eric", "Tchetgen Tchetgen", email = "etchetge@hsph.harvard.edu", role = "aut"))
@@ -14,7 +14,8 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports: gmm (>= 1.6-1),
-    BB
+    BB,
+    lmtest
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
