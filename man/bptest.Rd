@@ -60,7 +60,7 @@ A Simple Test for Heteroscedasticity and Random Coefficient Variation.
 R. Koenker (1981), A Note on Studentizing a Test for Heteroscedasticity.
 \emph{Journal of Econometrics} \bold{17}, 107--112.
 
-W. Kr?mer & H. Sonnberger (1986),
+W. Kramer & H. Sonnberger (1986),
 \emph{The Linear Regression Model under Test}. Heidelberg: Physica
 
 Achim Zeileis & Torsten Hothorn (2002), Diagnostic Checking in Regression Relationships. \emph{R News} \bold{2(3)}, 7-10. \url{https://CRAN.R-project.org/doc/Rnews/}
