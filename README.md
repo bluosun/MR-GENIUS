@@ -68,7 +68,7 @@ genius_mulA(Y,A,G,alpha=0.05,lower=-10,upper=10)
 
 ## The Breusch-Pagan test against heteroskedasticity
 
-The function *bptest* is exported from the "lmtest" R package (Achim Zeileis & Torsten Hothorn, 2002), and is included in the "genius" package to provide a way to test the heteroskedasticity identification condition (5) in Lemma 1 of Tchetgen Tchetgen et al. (2017).
+The function *bptest* is imported from the "lmtest" R package (Achim Zeileis & Torsten Hothorn, 2002), and is included in the "genius" package to provide a way to test the heteroskedasticity identification condition (5) in Lemma 1 of Tchetgen Tchetgen et al. (2017).
 
 # Examples
 
