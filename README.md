@@ -65,6 +65,11 @@ genius_mulY(Y,A,G,formula=A~G,alpha=0.05,lower=-10,upper=10)
 
 genius_mulA(Y,A,G,alpha=0.05,lower=-10,upper=10) 
 ```
+
+## The Breusch-Pagan test against heteroskedasticity
+
+The function *bptest* is exported from the "lmtest" R package (Achim Zeileis & Torsten Hothorn, 2002), and is included in the "genius" package to provide a way to test the heteroskedasticity identification condition (5) in Lemma 1 of Tchetgen Tchetgen et al. (2017).
+
 # Examples
 
 ```r
@@ -183,6 +188,8 @@ genius.mulA(Y,A,G);
 ```
 
 # References 
+Achim Zeileis & Torsten Hothorn (2002), Diagnostic Checking in Regression Relationships. R News 2(3), 7-10. \url{https://CRAN.R-project.org/doc/Rnews/}
+
 Tchetgen Tchetgen, E., Sun, B. and Walter, S. (2017). <a href="https://arxiv.org/abs/1709.07779"> The GENIUS Approach to Robust Mendelian Randomization Inference.</a> arXiv e-prints.
 
 
