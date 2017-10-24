@@ -127,6 +127,7 @@ U = as.vector(phi%*%t(G))+rnorm(N);
 A = as.vector(gamma%*%t(G)) +U + rnorm(N,mean=0,sd=abs(lambda0+as.vector(lambda1%*%t(G))));
 Y = as.vector(alpha%*%t(G)) + beta*A + U + rnorm(N);
 
+bptest(A~G);
 genius_addY(Y,A,G);
 
 #######################################################
@@ -188,7 +189,7 @@ genius.mulA(Y,A,G);
 ```
 
 # References 
-Achim Zeileis & Torsten Hothorn (2002), Diagnostic Checking in Regression Relationships. R News 2(3), 7-10. \url{https://CRAN.R-project.org/doc/Rnews/}
+Achim Zeileis & Torsten Hothorn (2002), Diagnostic Checking in Regression Relationships. R News 2(3), 7-10. https://CRAN.R-project.org/doc/Rnews/
 
 Tchetgen Tchetgen, E., Sun, B. and Walter, S. (2017). <a href="https://arxiv.org/abs/1709.07779"> The GENIUS Approach to Robust Mendelian Randomization Inference.</a> arXiv e-prints.
 
