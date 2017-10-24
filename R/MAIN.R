@@ -483,5 +483,6 @@ genius_mulA <- function(Y,A,G,alpha=0.05,lower=-10,upper=10) {
 #'
 #' @importFrom lmtest bptest
 #' @name bptest
+#' @export
 NULL
 
